@@ -43,12 +43,17 @@ document.querySelector('#play').addEventListener('click', () => {
     // osc.stop(actx.currentTime + 2);
 });
 
-TESTER = document.getElementById('tester');
+let exp = "Math.sin(x)";
 
-Plotly.plot( TESTER, [{
-    x: [1, 2, 3, 4, 5],
-    y: [1, 2, 4, 8, 16] }], { 
-    margin: { t: 0 } }, {showSendToCloud:true} );
+// Generate values
+const xValues = [];
+const yValues = [];
+for (let x = 0; x <= 10; x += 0.1) {
+  xValues.push(x);
+  yValues.push(eval(exp));
+}
 
-/* Current Plotly.js version */
-console.log( Plotly.BUILD );
+// Display using Plotly
+const data = [{x:xValues, y:yValues, mode:"lines"}];
+const layout = {title: "y = " + exp};
+Plotly.newPlot("myPlot", data, layout);
