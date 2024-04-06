@@ -8,10 +8,7 @@
         <p>New things will be here soon...</p>
         <button type="button" id="play">Click Me!</button>
         <script src="webaudiotest.js"></script>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
-        <div id="myPlot" style="width:600px;height:250px;"></div>
-
-        <script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js">
             var plotlyDiv = document.getElementById("myPlot");
 
             let exp = "Math.sin(x)";
@@ -28,6 +25,7 @@
             const data = [{x:xValues, y:yValues, mode:"lines"}];
             const layout = {title: "y = " + exp};
             Plotly.newPlot(plotlyDiv, data, layout);
-        </script>
+        </script> 
+        <div id="myPlot" style="width:600px;height:250px;"></div>
     </body>
 </html>
