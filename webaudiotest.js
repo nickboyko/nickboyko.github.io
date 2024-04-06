@@ -15,23 +15,6 @@
 //     const x = y.map((sum = 0, n => sum += n));
 // }
 
-var plotlyDiv = document.getElementById("myPlot");
-
-let exp = "Math.sin(x)";
-
-// Generate values
-const xValues = [];
-const yValues = [];
-for (let x = 0; x <= 10; x += 0.1) {
-  xValues.push(x);
-  yValues.push(eval(exp));
-}
-
-// Display using Plotly
-const data = [{x:xValues, y:yValues, mode:"lines"}];
-const layout = {title: "y = " + exp};
-Plotly.newPlot(plotlyDiv, data, layout);
-
 document.querySelector('#play').addEventListener('click', () => {
     const actx = new (AudioContext || webkitAudioContext)();
     if (!actx) throw 'Not supported :(';
@@ -59,3 +42,20 @@ document.querySelector('#play').addEventListener('click', () => {
     // osc.start();
     // osc.stop(actx.currentTime + 2);
 });
+
+var plotlyDiv = document.getElementById("myPlot");
+
+let exp = "Math.sin(x)";
+
+// Generate values
+const xValues = [];
+const yValues = [];
+for (let x = 0; x <= 10; x += 0.1) {
+  xValues.push(x);
+  yValues.push(eval(exp));
+}
+
+// Display using Plotly
+const data = [{x:xValues, y:yValues, mode:"lines"}];
+const layout = {title: "y = " + exp};
+Plotly.newPlot(plotlyDiv, data, layout);
