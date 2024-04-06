@@ -10,5 +10,24 @@
         <script src="webaudiotest.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
         <div id="myPlot" style="width:600px;height:250px;"></div>
+
+        <script>
+            var plotlyDiv = document.getElementById("myPlot");
+
+            let exp = "Math.sin(x)";
+            
+            // Generate values
+            const xValues = [];
+            const yValues = [];
+            for (let x = 0; x <= 10; x += 0.1) {
+              xValues.push(x);
+              yValues.push(eval(exp));
+            }
+            
+            // Display using Plotly
+            const data = [{x:xValues, y:yValues, mode:"lines"}];
+            const layout = {title: "y = " + exp};
+            Plotly.newPlot(plotlyDiv, data, layout);
+        </script>
     </body>
 </html>
