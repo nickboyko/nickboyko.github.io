@@ -43,6 +43,8 @@ document.querySelector('#play').addEventListener('click', () => {
     // osc.stop(actx.currentTime + 2);
 });
 
+var plotlyDiv = document.getElementById("myPlot");
+
 let exp = "Math.sin(x)";
 
 // Generate values
@@ -56,4 +58,4 @@ for (let x = 0; x <= 10; x += 0.1) {
 // Display using Plotly
 const data = [{x:xValues, y:yValues, mode:"lines"}];
 const layout = {title: "y = " + exp};
-Plotly.newPlot("myPlot", data, layout);
+Plotly.newPlot(plotlyDiv, data, layout);
