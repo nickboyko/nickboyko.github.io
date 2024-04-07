@@ -1,19 +1,20 @@
-// function random_walk_boundary(steps, limit) {
-//     let y = [];
-//     let x_cur = 0;
-//     const step_size = 1;
+function random_walk_boundary(steps, limit) {
+    let y = [];
+    let x_cur = 0;
+    const step_size = 1;
 
-//     for (let i = 0; i < steps; i++) {
-//         if (Math.abs(x_cur) + step_size > limit) {
-//             const step = Math.sign(x_cur) * (-1 * step_size);
-//         } else {
-//             const step = (Math.round(Math.random()) * 2 - 1) * step_size;
-//         }
-//         x_cur += step;
-//         y.push(step);
-//     }
-//     const x = y.map((sum = 0, n => sum += n));
-// }
+    for (let i = 0; i < steps; i++) {
+        if (Math.abs(x_cur) + step_size > limit) {
+            const step = Math.sign(x_cur) * (-1 * step_size);
+        } else {
+            const step = (Math.round(Math.random()) * 2 - 1) * step_size;
+        }
+        x_cur += step;
+        y.push(step);
+    }
+    const x = y.map((sum = 0, n => sum += n));
+    return x;
+}
 
 document.querySelector('#play').addEventListener('click', () => {
     const actx = new (AudioContext || webkitAudioContext)();
@@ -49,13 +50,14 @@ let exp = "Math.sin(x)";
 
 // Generate values
 const xValues = [];
-const yValues = [];
-for (let x = 0; x <= 10; x += 0.1) {
+// const yValues = [];
+const randomWalk = random_walk_boundary(1000, 10)
+for (let x = 0; x <= 1000; x += 1) {
   xValues.push(x);
-  yValues.push(eval(exp));
+//   yValues.push(eval(exp));
 }
 
 // Display using Plotly
-const data = [{x:xValues, y:yValues, mode:"lines"}];
+const data = [{x:xValues, y:randomWalk, mode:"lines"}];
 const layout = {title: "y = " + exp};
 Plotly.newPlot(plotlyDiv, data, layout);
