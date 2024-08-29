@@ -16,6 +16,22 @@ function random_walk_boundary(steps, limit) {
     return x;
 }
 
+function second_order_random_walk(steps, limit) {
+    let xs = [0];
+    let ys = random_walk_boundary(steps, limit);
+
+    for (const y of ys) {
+        let next_step = xs[-1] + y;
+        if (Math.abs(next_step) > limit) {
+            next_step = xs[-1] + (Math.sign(y) * -1) * Math.abs(y)
+        }
+        xs.push(next_step)
+    }
+    return xs, ys
+}
+
+
+
 document.querySelector('#play').addEventListener('click', () => {
     const actx = new (AudioContext || webkitAudioContext)();
     if (!actx) throw 'Not supported :(';
@@ -46,7 +62,7 @@ document.querySelector('#play').addEventListener('click', () => {
 
 var plotlyDiv = document.getElementById("myPlot");
 
-let exp = "Math.sin(x)";
+let exp = "RANDOM";
 
 // Generate values
 const xValues = [];
@@ -61,3 +77,5 @@ for (let x = 0; x <= 1000; x += 1) {
 const data = [{x:xValues, y:randomWalk, mode:"lines"}];
 const layout = {title: "y = " + exp};
 Plotly.newPlot(plotlyDiv, data, layout);
+
+console.log(random_walk_boundary(1000, 10));
