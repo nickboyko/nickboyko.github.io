@@ -32,7 +32,7 @@ function second_order_random_walk(steps, limit) {
 
 
 
-document.querySelector('#play').addEventListener('click', () => {
+document.querySelector('#play1').addEventListener('click', () => {
     const actx = new (AudioContext || webkitAudioContext)();
     if (!actx) throw 'Not supported :(';
     // const osc = actx.createOscillator();
@@ -58,6 +58,32 @@ document.querySelector('#play').addEventListener('click', () => {
     // osc.connect(actx.destination);
     // osc.start();
     // osc.stop(actx.currentTime + 2);
+});
+
+document.querySelector('#play2').addEventListener('click', () => {
+    const actx = new (AudioContext || webkitAudioContext)();
+    if (!actx) throw 'Not supported :(';
+    
+    const osc = actx.createOscillator();
+
+    osc.type = 'sine';
+    osc.frequency.value = 440;
+    osc.connect(actx.destination);
+    osc.start();
+    osc.stop(actx.currentTime + 2);
+});
+
+document.querySelector('#play3').addEventListener('click', () => {
+    const actx = new (AudioContext || webkitAudioContext)();
+    if (!actx) throw 'Not supported :(';
+    
+    const osc = actx.createOscillator();
+
+    osc.type = 'sawtooth';
+    osc.frequency.value = 440;
+    osc.connect(actx.destination);
+    osc.start();
+    osc.stop(actx.currentTime + 2);
 });
 
 var plotlyDiv = document.getElementById("myPlot");
