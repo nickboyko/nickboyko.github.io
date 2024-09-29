@@ -1,0 +1,15 @@
+#example-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 500px;
+    border: 1px black solid;
+    margin: 0 auto;
+}
+
+.audio-example {
+    width: 100px;
+    height: 200px;
+    border: 1px black solid;
+    background: #369;
+}

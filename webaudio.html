@@ -1,14 +1,30 @@
 <!DOCTYPE html>
+
 <head>
+    <link rel="stylesheet" href="webaudio.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <html>
     <body>
         <h1>Web Audio testing ground</h1>
         <p>New things will be here soon...</p>
-        <button type="button" id="play1">Example 1</button>
-        <button type="button" id="play2">Example 2</button>
-        <button type="button" id="play3">Example 3</button>
+        <div id="example-container">
+            <div class="audio-example">
+                <h1>Karplus-Strong</h1>
+                <button type="button" id="play1">Example 1</button>
+                <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            </div>
+            <div class="audio-example">
+                <h1>FM synthesis</h1>
+                <button type="button" id="play2">Example 2</button>
+                <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            </div>
+            <div class="audio-example">
+                <h1>Sample player</h1>
+                <button type="button" id="play3">Example 3</button>
+                <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            </div>
+        </div>
         <div id="myPlot" style="width:600px;height:250px;"></div>
         <script src="webaudiotest.js"></script>
     </body>

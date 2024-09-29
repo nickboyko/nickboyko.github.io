@@ -30,6 +30,22 @@ function second_order_random_walk(steps, limit) {
     return xs, ys
 }
 
+function fmSynth() {
+    let carrier, mod1;
+
+    let attackTime = attack;
+    let releaseTime = release;
+
+    this.playNote = function (note) {
+        carrier = actx.createOscillator();
+        mod1 = actx.createOscillator();
+
+        carrier.frequency.value = 440 * ((2 ** (1/12)) ** note)
+        mod1.frequency.value = mod1Freq + mod1FreqFine;
+        
+    }
+}
+
 
 
 document.querySelector('#play1').addEventListener('click', () => {
