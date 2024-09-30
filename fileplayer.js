@@ -16,7 +16,7 @@ function handleFiles(event) {
         playButton.style.display = "block";
         noUploadText.style.display = "none";
     }
-    
+
     // var audioFile = fetch(fileurl)
     //     .then(res => res.arrayBuffer())
     //     .then(buffer => actx.decodeAudioData(buffer))
@@ -43,7 +43,3 @@ playButton.addEventListener('click', () => {
 }, 
 false, 
 );
-
-
-
-    
