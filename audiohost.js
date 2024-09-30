@@ -1,5 +1,5 @@
 // initialize page's audio context
-const actx = new (AudioContext || webkitAudioContext)();
+const actx = new (window.AudioContext || window.webkitAudioContext)();
 if (!actx) throw 'Not supported :(';
 
 var out = actx.destination;

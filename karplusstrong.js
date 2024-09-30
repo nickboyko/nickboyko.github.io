@@ -1,17 +1,24 @@
-// initialize webaudio nodes for K-S technique
-let noise = new AudioBufferSourceNode(actx, {loop:true}),
-    noiseGain = new GainNode(actx,{gain:0}),
-    delay = new DelayNode(actx,{delayTime:0.001}),
-    feedbackGain = new GainNode(actx, {gain:0.9});
+// const ksPlay = document.getElementById("ksPlay");
+
+// initialize nodes for K-S technique
+// const noise = new AudioBufferSourceNode(actx, {loop:true});
+const noise = actx.createBufferSource();
+let noiseGain = new GainNode(actx, {gain:0});
+let delay = new DelayNode(actx, {delayTime:0.003});
+let feedbackGain = new GainNode(actx, {gain:0.98});
 
 // create buffer of white noise, for impulse
-noise.buffer = actx.createBuffer(1, actx.sampleRate, actx.sampleRate);
-for (i=0; i < actx.sampleRate; i++) {
-    noise.buffer.getChannelData(0)[i] = 2 * Math.random() - 1
+const arrayBuffer = actx.createBuffer(1, actx.sampleRate, actx.sampleRate);
+const nowBuffering = arrayBuffer.getChannelData(0);
+for (let i=0; i < actx.sampleRate; i++) {
+    nowBuffering[i] = 2 * Math.random() - 1;
 }
 
+noise.buffer = arrayBuffer;
+noise.loop = true;
+
 // webaudio routing -- feedback/delay networks
-noise.start();
+noise.start(actx.currentTime);
 noise.connect(noiseGain);
 noiseGain.connect(masterGain);
 noiseGain.connect(delay);
@@ -20,7 +27,7 @@ feedbackGain.connect(delay);
 feedbackGain.connect(masterGain);
 
 // update decay slider values
-DecayLabel.innerHTML = Decay.value
+DecayLabel.innerHTML = Decay.value;
 Decay.oninput = function() {
     feedbackGain.gain.value = this.value;
     DecayLabel.innerHTML = Number(this.value).toFixed(3);
@@ -29,7 +36,7 @@ Decay.oninput = function() {
 // update delay slider values
 DelayLabel.innerHTML = Delay.value;
 Delay.oninput = function() {
-    delay.delayTime.value=0.001 * this.value;
+    delay.delayTime.value = 0.001 * this.value;
     DelayLabel.innerHTML = Number(this.value).toFixed(2);
 }
 
@@ -38,9 +45,13 @@ WidthLabel.innerHTML = Width.value;
 Width.oninput = function() { WidthLabel.innerHTML = Number(this.value).toFixed(2); }
 
 // envelope for noise generation 
-Play.onclick = function() {
-    actx.resume();
-    let now = actx.currentTime;
-    noiseGain.gain.setValueAtTime(0.5, now);
-    noiseGain.gain.linearRampToValueAtTime(0, now + Width.value/1000);
+ksPlay.onclick = function() {
+    console.log(noise.buffer.getChannelData(0));
+    actx.resume().then(() => {
+        console.log(Width.value);
+        let now = actx.currentTime;
+        noiseGain.gain.setValueAtTime(0.5, now);
+        noiseGain.gain.linearRampToValueAtTime(0, now + Width.value/1000);
+    });
+    
 }
