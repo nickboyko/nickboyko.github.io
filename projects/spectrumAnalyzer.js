@@ -252,8 +252,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
                     const binHeight = y - nextY;
     
-                    // ensures no vertical gaps by using Math.ceil for height
-                    spectrogramCtx.fillRect(x, nextY, width, Math.ceil(binHeight));
+                    // ensures no horizontal gaps by using Math.ceil for height
+                    spectrogramCtx.fillRect(x, nextY, width+1, Math.ceil(binHeight));
                 }
             });
     
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
                     const y = spectrogramCanvas.height - ((bin - minBin + 1) * rangeHeight);
                     
-                    spectrogramCtx.fillRect(x, y, width, Math.ceil(rangeHeight));
+                    spectrogramCtx.fillRect(x, y, width+1, Math.ceil(rangeHeight));
                 }
             });
         }
