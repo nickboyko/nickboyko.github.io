@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let bufferLength = null;
     let spectrogramData = [];
     let isLogScale = false;
-    const maxFrames = 75;
+    const maxFrames = 100;
 
     // file player ()
     let fileAudio;
@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById("sampleUpload").addEventListener("change", handleFiles, false);
 
+    // slider handling, making only possible ranges valid
     minFreqSlider.addEventListener('input', function () {
         if (parseInt(minFreqSlider.value) > parseInt(maxFreqSlider.value)) {
             maxFreqSlider.value = minFreqSlider.value;
@@ -63,15 +64,20 @@ document.addEventListener('DOMContentLoaded', function () {
         scaleBtn.textContent = isLogScale ? "Switch to Linear Scale" : "Switch to Log Scale";
     });
 
+    // mic button
     micBtn.addEventListener('click', function () {
         if (!analyzerStarted) {
+            // start analyzer in context and connect audio file node
             analyzerStarted = true;
             window.analyzer = actx.createAnalyser();
             window.analyzer.fftSize = 2048;
             bufferLength = analyzer.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
+            track.connect(window.analyzer);
+            
         }
         if (!micFlag) {
+            // ask user permission for microphone input
             navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
                 const source = actx.createMediaStreamSource(stream);
                 source.connect(window.analyzer);
@@ -80,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }).catch(function (err) {
                 console.error('Error accessing media devices: ', err);
             });
+
             micFlag = true;
 
             if (actx.state === 'suspended') {
@@ -90,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         } else {
+            console.log('running well!')
             if (actx.state === 'running') {
                 actx.suspend().then(() => {
                     micBtn.textContent = 'Start sampling';
@@ -107,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     playButton.addEventListener('click', () => {
         if (!analyzerStarted) {
+            // if playButton starts analyzer
             analyzerStarted = true;
             window.analyzer = actx.createAnalyser();
             window.analyzer.fftSize = 1024;
@@ -129,28 +138,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         // playback flag to handle play/pause
         if (playButton.dataset.playing === "false") {
-            actx.resume().then(() => {
-                micBtn.textContent = 'Stop sampling';
-                console.log('actx resumed');
-                audioElement.play();
-                playButton.dataset.playing = "true";
-                updateSpectrum();
-            });
-            // audioElement.play();
-            // playButton.dataset.playing = "true";
+            audioElement.play();
+            playButton.dataset.playing = "true";
         } else if (playButton.dataset.playing === "true") {
-            actx.suspend().then(() => {
-                    micBtn.textContent = 'Start sampling';
-                    audioElement.pause();
-                    playButton.dataset.playing = "false";
-                    console.log('ACTX suspended');
-                });
-            // audioElement.pause();
-            // playButton.dataset.playing = "false";
+            audioElement.pause();
+            playButton.dataset.playing = "false";
         }
     });
-
-
 
     function drawInactiveText(theContext) {
         theContext.fillStyle = 'rgb(0, 0, 0)';
@@ -186,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let barHeight;
         let x = 0;
 
+        // log spectrum scaling -- just adds blank space of appropriate size
         for (let i = 0; i < bufferLength; i++) {
             barHeight = dataArray[i];
             if (isLogScale) {
@@ -198,26 +193,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 x = i * barWidth;
             }
             
-            ctx.fillStyle = `rgb(${barHeight + 100}, 100, ${barHeight + 100})`
+            ctx.fillStyle = `rgb(${barHeight + 100}, 120, ${barHeight + 200})`
             ctx.fillRect(x, height - barHeight, barWidth, barHeight);
         }
 
         drawSpectrogram(dataArray);
     }
 
+    // helper function for obtaining fft bin indices
     function getBinIndex(frequency, sampleRate, fftSize) {
         return Math.floor(frequency / (sampleRate / fftSize));
     }
     
     function drawSpectrogram(dataArray) {
-        // Get user-selected frequency range
+        // get user-selected frequency range
         const minFreq = parseFloat(document.getElementById('minFreq').value);
         const maxFreq = parseFloat(document.getElementById('maxFreq').value);
         
-        // Calculate corresponding bin indices
+        // calculate corresponding fft bin indices
         const minBin = getBinIndex(minFreq, actx.sampleRate, window.analyzer.fftSize);
         const maxBin = getBinIndex(maxFreq, actx.sampleRate, window.analyzer.fftSize);
-    
+        
+        // scrolling animation
         spectrogramData.push(new Uint8Array(dataArray));
         if (spectrogramData.length > maxFrames) {
             spectrogramData.shift();
@@ -225,7 +222,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
         spectrogramCtx.fillStyle = 'rgb(0, 0, 0)';
         spectrogramCtx.fillRect(0, 0, spectrogramCanvas.width, spectrogramCanvas.height);
-    
+        
+        // bound range to user min and max
         const width = spectrogramCanvas.width / maxFrames;
         const rangeHeight = spectrogramCanvas.height / (maxBin - minBin + 1);
     
@@ -244,9 +242,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 for (let bin = minBin; bin <= maxBin; bin++) {
                     const value = frameData[bin];
                     const brightness = value / 256;
-                    spectrogramCtx.fillStyle = `rgb(${brightness * 255}, 0, ${brightness * 255})`;
-    
-                    // Corrected y position calculation
+                    spectrogramCtx.fillStyle = `rgb(${brightness * 230}, ${brightness * 120}, ${brightness * 255})`;
+                    
+                    // dynamically assigns drawn height of each bin
                     const y = spectrogramCanvas.height - logScaleMap[bin - minBin];
                     const nextY = (bin === maxBin)
                         ? 0
@@ -254,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
                     const binHeight = y - nextY;
     
-                    // Ensure no gaps by using Math.ceil for height
+                    // ensures no vertical gaps by using Math.ceil for height
                     spectrogramCtx.fillRect(x, nextY, width, Math.ceil(binHeight));
                 }
             });
@@ -266,12 +264,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 for (let bin = minBin; bin <= maxBin; bin++) {
                     const value = frameData[bin];
                     const brightness = value / 256;
-                    spectrogramCtx.fillStyle = `rgb(${brightness * 255}, 0, ${brightness * 255})`;
+                    spectrogramCtx.fillStyle = `rgb(${brightness * 230}, ${brightness * 120}, ${brightness * 255})`;
     
-                    // Corrected y position calculation
                     const y = spectrogramCanvas.height - ((bin - minBin + 1) * rangeHeight);
                     
-                    // Ensure no gaps by using Math.ceil for height
                     spectrogramCtx.fillRect(x, y, width, Math.ceil(rangeHeight));
                 }
             });
