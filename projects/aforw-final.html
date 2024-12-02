@@ -1,9 +1,56 @@
 <!DOCTYPE html>
+
 <head><link rel="stylesheet" href="homework.css"></head>
 <html>
-<body>
-<h1>hi!</h1>
-<p>welcome to my projects page. more things forthcoming.</p>
-<p>you might prefer to check out my <a href="homework.html"> "audio for the web" homework assignments</a> instead.</p>
-</body>
+    <body>
+        <h1>Audio Spectrum Analyzer</h1>
+        <p>click the button below to begin.</p>
+
+        <div id="example-container"> 
+            <div class="audio-example">
+                <h2 id="gainVal"></h2>
+                <input type="range" min="0" max="1" value="0.1" step="0.01" class="slider" id="masterGain">
+                <p>watch your ears!</p>
+            </div>
+            <div class="audio-example">
+                <button id="toggle">Start mic sampling</button>
+                <button id="toggleScale">Log/Lin Scaling</button>
+                <label for="minFreq" id="minLabel">Min Frequency (Hz): 100</label>
+                <input type="range" id="minFreq" min="1" max="20000" value="100">
+                
+                <label for="maxFreq" id="maxLabel">Max Frequency (Hz): 2000</label>
+                <input type="range" id="maxFreq" min="1" max="20000" value="2000">
+            </div>
+            <div class="audio-example">
+                <h1>audio player</h1>
+                <label for="sampleUpload">Upload an audio file:</label>
+                <input type="file" accept="audio/*" id="sampleUpload"> <br>
+                <audio id="audio" controls>
+                    <source src="" id="src" />
+                </audio>
+                <span id="uploadFlag"><b>upload file to use this section</b></span>
+                <button type='button' data-playing='false' role='switch' aria-checked="false" id='playFile'>
+                    <span>play/pause</span>
+                </button>
+            </div>
+        </div>
+        
+        <div id="canvasContainer">
+            <div id="spectrum">
+                <canvas id="spectrumCanvas"></canvas>
+            </div>
+            <div id="spectrogram">
+                <canvas id="spectrogramCanvas"></canvas>
+            </div>
+        </div>
+
+        <p>you might also want to check out my other <a href="homework.html"> "audio for the web" homework assignments</a>.</p>
+
+        <script src="audiohost.js"></script>
+        
+        <!-- <script src="fileplayer.js"></script> -->
+        <script src="spectrumAnalyzer.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    </body>
 </html>
